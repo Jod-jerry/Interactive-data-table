@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Table Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      max-width: 850px;
+      margin: auto;
+      overflow-x: auto;
+    }
+
+    input {
+      margin-bottom: 12px;
+      padding: 8px 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #eee;
+      cursor: pointer;
+    }
+
+    tr:hover {
+      background: #fafafa;
+    }
+
+    .asc::after { content: " ↑"; }
+    .desc::after { content: " ↓"; }
+  </style>
+</head>
+<body>
+
+  <h2>Interactive Data Table</h2>
+  <div class="box">
+    
+    <input type="text" id="searchBox" placeholder="Type to search...">
+
+    
+    <table id="myTable">
+      <thead>
+        <tr>
+          <th onclick="sortIt(0)">Name</th>
+          <th onclick="sortIt(1)">Age</th>
+          <th onclick="sortIt(2)">Country</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Jerry</td><td>24</td><td>India</td></tr>
+        <tr><td>Tom</td><td>19</td><td>India</td></tr>
+        <tr><td>Motu</td><td>30</td><td>Nepal</td></tr>
+        <tr><td>Patlu</td><td>27</td><td>Bhutan</td></tr>
+        <tr><td>Johnny</td><td>22</td><td>China</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    
+    const searchBox = document.getElementById("searchBox");
+    searchBox.addEventListener("keyup", function(){
+      let txt = this.value.toLowerCase();
+      let rows = document.querySelectorAll("#myTable tbody tr");
+      
+      rows.forEach(r => {
+        r.style.display = r.innerText.toLowerCase().includes(txt) ? "" : "none";
+      });
+    });
+
+    
+    let sortDir = {};  
+    function sortIt(col){
+      const table = document.getElementById("myTable");
+      const body = table.tBodies[0];
+      const rows = Array.from(body.querySelectorAll("tr"));
+      const ths = table.querySelectorAll("th");
+
+     
+      ths.forEach((th,i) => { if(i!==col) th.classList.remove("asc","desc"); });
+
+      let dir = sortDir[col] === "asc" ? "desc" : "asc";
+      sortDir[col] = dir;
+
+      rows.sort((a,b) => {
+        let A = a.children[col].innerText.trim();
+        let B = b.children[col].innerText.trim();
+        
+        if(!isNaN(A) && !isNaN(B)){
+          return dir==="asc" ? A-B : B-A;
+        }else{
+          return dir==="asc" ? A.localeCompare(B) : B.localeCompare(A);
+        }
+      });
+
+      rows.forEach(r => body.appendChild(r));
+
+      ths[col].classList.remove("asc","desc");
+      ths[col].classList.add(dir);
+    }
+  </script>
+</body>
+</html>
