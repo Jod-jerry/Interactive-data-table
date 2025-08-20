@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexible Input Component</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for additional visual feedback */
+        .input-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-label {
+            position: absolute;
+            left: 0.75rem;
+            top: 0.75rem;
+            padding: 0 0.25rem;
+            background-color: white;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            transform-origin: left center;
+            color: #6b7280;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .input-field:focus + .input-label,
+        .input-field:not(:placeholder-shown) + .input-label {
+            transform: translateY(-1.25rem) scale(0.85);
+            color: #3b82f6;
+        }
+
+        /* Validation states */
+        .input-field.error {
+            border-color: #ef4444;
+        }
+
+        .input-field.error:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        .input-field.error + .input-label {
+            color: #ef4444;
+        }
+
+        .input-field.success {
+            border-color: #10b981;
+        }
+
+        .input-field.success:focus {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+        }
+
+        .input-field.success + .input-label {
+            color: #10b981;
+        }
+
+        .input-field.disabled {
+            background-color: #f3f4f6;
+            cursor: not-allowed;
+        }
+
+        .validation-message {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            padding-left: 0.5rem;
+        }
+
+        .error-message {
+            color: #ef4444;
+        }
+
+        .success-message {
+            color: #10b981;
+        }
+
+        .hint-message {
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Flexible Input Component</h1>
+        
+        <!-- Default Input -->
+        <div class="input-container">
+            <input type="text" id="defaultInput" class="input-field" placeholder=" ">
+            <label for="defaultInput" class="input-label">Default Input</label>
+        </div>
+
+        <!-- Error State -->
+        <div class="input-container">
+            <input type="email" id="emailInput" class="input-field error" placeholder=" " value="invalid.email">
+            <label for="emailInput" class="input-label">Email Address</label>
+            <div class="validation-message error-message">Please enter a valid email address</div>
+        </div>
+
+        <!-- Success State -->
+        <div class="input-container">
+            <input type="password" id="passwordInput" class="input-field success" placeholder=" " value="securePassword123">
+            <label for="passwordInput" class="input-label">Password</label>
+            <div class="validation-message success-message">Strong password!</div>
+        </div>
+
+        <!-- Disabled State -->
+        <div class="input-container">
+            <input type="text" id="disabledInput" class="input-field disabled" placeholder=" " disabled>
+            <label for="disabledInput" class="input-label">Disabled Field</label>
+        </div>
+
+        <!-- Input with Hint -->
+        <div class="input-container">
+            <input type="text" id="usernameInput" class="input-field" placeholder=" ">
+            <label for="usernameInput" class="input-label">Username</label>
+            <div class="validation-message hint-message">Must be 3-20 characters, letters and numbers only</div>
+        </div>
+
+        <!-- Custom Validation Example -->
+        <div class="input-container">
+            <input type="text" id="dynamicInput" class="input-field" placeholder=" " oninput="validateDynamicInput(this)">
+            <label for="dynamicInput" class="input-label">Try typing 'error' or 'success'</label>
+            <div id="dynamicMessage" class="validation-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Example dynamic validation
+        function validateDynamicInput(input) {
+            const messageElement = document.getElementById('dynamicMessage');
+            const value = input.value.toLowerCase();
+            
+            // Reset classes
+            input.classList.remove('error', 'success');
+            messageElement.className = 'validation-message';
+            messageElement.textContent = '';
+
+            if (value === 'error') {
+                input.classList.add('error');
+                messageElement.classList.add('error-message');
+                messageElement.textContent = 'You triggered an error state!';
+            } else if (value === 'success') {
+                input.classList.add('success');
+                messageElement.classList.add('success-message');
+                messageElement.textContent = 'You triggered a success state!';
+            } else if (value.length > 0) {
+                messageElement.classList.add('hint-message');
+                messageElement.textContent = 'Type "error" or "success" to see validation states';
+            }
+        }
+
+        // Example API integration handler
+        function validateWithAPI(inputElement, validationEndpoint) {
+            // This would be for actual API validation
+            // fetch(validationEndpoint, {
+            //     method: 'POST',
+            //     body: JSON.stringify({ value: inputElement.value })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     if (data.valid) {
+            //         inputElement.classList.add('success');
+            //         inputElement.classList.remove('error');
+            //     } else {
+            //         inputElement.classList.add('error');
+            //         inputElement.classList.remove('success');
+            //     }
+            // });
+        }
+    </script>
+</body>
+</html>
+
+```
