@@ -1,0 +1,27 @@
+A simple input component with floating labels, validation states, and modern UI built using HTML, TailwindCSS, and JavaScript.
+
+✨ Features
+
+Floating labels with smooth animation
+
+Error ✅ Success ✅ Disabled ✅ Default states
+
+Real-time validation (type "error" or "success")
+
+Clean and responsive design
+
+🚀 Usage
+
+Clone or download this repo
+
+Open index.html in your browser
+
+Try the different input fields and validation states
+
+🔮 Future Plans
+
+API-based validation
+
+More input types (number, date, textarea, etc.)
+
+Framework version (React / Vue)
